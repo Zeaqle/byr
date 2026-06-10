@@ -16,6 +16,16 @@ class AlbumManager {
         if (saved) {
             this.photos = JSON.parse(saved);
         }
+        if (this.photos.length === 0) {
+            // Add default photo
+            this.photos = [{
+                id: Date.now(),
+                name: 'gallery.png',
+                data: 'images/gallery.png',
+                date: '2026-06-10'
+            }];
+            this.savePhotos();
+        }
     }
 
     savePhotos() {
