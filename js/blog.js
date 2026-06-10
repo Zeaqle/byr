@@ -28,7 +28,7 @@ class BlogManager {
 
 大概在进省队前，我认为我的长项在非传统和计数，周围有些人也这么认为。省选没有计数（d1t1 算吗？我不知道），只有一个签到交互，不过我还是凭借 d1t2 d1t3 d2t3 翻进队了。二轮省集时我用很厉害的做法通过了一个困难计数题，之前模拟赛也常常通过一些很不平凡的计数，这给我一种想法：NOI 看上去不会考计数，即使考了，我也有足够的水平应付，现在应该将训练重心放到最优化、非传统和构造上。同样是二轮省集，有一天我斩获 $100+80+80$，T1 是构造题，T2 需要分析性质，这种场次我一般都会爆掉，不过那天出奇的顺利，于是产生了一种错觉：我应当已经具备不低的水平，达到了历史最大值。
 
-APIO 前我登顶了香山，在山顶写了个 "win"。很难说当时想赢的是什么，赢 APIO，赢 NOI，还有呢？比赛日我 4:30 就醒了，由于那个酒店实在令人难以获得舒适的睡眠，我开始打三国杀，打了一会，又睡了一会，就该出发了。到学校以后离进场还有很长时间，所以咖啡早早就喝完了。场上我其实获得了正确的开题顺序，但是在 T2 上花费了很长时间才获得大家都有的 $56$ 分，只凭 $<$ 和 $>$ 只有一次 $1$ bit 信息，sub4 需要做到一次 $\sim1.5$ bit 的样子，于是我开始思考 $=$ 的作用，得出了惊人的结论：如果返回了 $0$，必然可以直接得到答案。这显然是错的，因为我所有的思考都建立在了自己已经知道了蛋糕的位置，导致后面的思考也全错了。幸运的是 ，我意识到这么做下去大概是做不出来的，因为将 $56$ 分做法优化掉一次询问就已经十分困难了。
+APIO 前我登顶了香山，在山顶写了个 "win"。很难说当时想赢的是什么，赢 APIO，赢 NOI，还有呢？比赛日我 4:30 就醒了，由于那个酒店实在令人难以获得舒适的睡眠，我开始打三国杀，打了一会，又睡了一会，就该出发了。到学校以后离进场还有很长时间，所以咖啡早早就喝完了。场上我其实获得了正确的开题顺序，但是在 T2 上花费了很长时间才获得大家都有的 $56$ 分，只凭 $<$ 和 $>$ 只有一次 $1$ bit 信息，sub4 需要做到一次 $\\sim1.5$ bit 的样子，于是我开始思考 $=$ 的作用，得出了惊人的结论：如果返回了 $0$，必然可以直接得到答案。这显然是错的，因为我所有的思考都建立在了自己已经知道了蛋糕的位置，导致后面的思考也全错了。幸运的是 ，我意识到这么做下去大概是做不出来的，因为将 $56$ 分做法优化掉一次询问就已经十分困难了。
 
 T1，开场我就做出了 $w_i\\to w_i-1$ 的转化，同时对性质 B 做出了 $w_i\\to\\frac1{w_i}$ 的转化，进而得到一个延迟钦定做法，但当时我认为这个做法没法转移，或者转移复杂度太高，导致直到最后我也只会 $35+15$，$15$ 分是 $n\\leq50$ 时状压等价类转移，也不一定能过。T3，存在一个时刻我得到了性质 B 的正确做法，但后面我想错了一点东西，导致认为这个做法是错的。更有趣的事实是，省集时我尝试学习了树上圆理论但没学明白，不过做不出这个题也不怪我。
 
@@ -175,13 +175,12 @@ $139$ 也是我 WC2025 的得分，当时场上 catfood 做了三个小时才做
         categoryBadge.className = 'post-category-badge ' + post.category;
 
         const contentDiv = document.getElementById('viewPostContent');
-        if (window.marked) {
-            contentDiv.innerHTML = window.marked.parse(post.content);
-        } else {
-            contentDiv.innerHTML = post.content.replace(/\n/g, '<br>');
-        }
+        
+        // Protect LaTeX math from markdown processing
+        let html = this.renderContent(post.content);
+        contentDiv.innerHTML = html;
 
-        // Render LaTeX
+        // Render LaTeX with KaTeX
         if (window.renderMathInElement) {
             renderMathInElement(contentDiv, {
                 delimiters: [
@@ -193,6 +192,40 @@ $139$ 也是我 WC2025 的得分，当时场上 catfood 做了三个小时才做
         }
 
         modal.classList.add('active');
+    }
+
+    // Preprocess content: protect math from markdown, then render markdown
+    renderContent(content) {
+        // Extract and protect math expressions
+        const blocks = [];
+        let processed = content;
+        
+        // Protect display math $$...$$
+        processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (match, inner) => {
+            blocks.push(match);
+            return `%%MATHBLOCK${blocks.length - 1}%%`;
+        });
+        
+        // Protect inline math $...$
+        processed = processed.replace(/\$([^\n$]*?)\$/g, (match, inner) => {
+            blocks.push(match);
+            return `%%MATHBLOCK${blocks.length - 1}%%`;
+        });
+
+        // Now safe to render markdown
+        let html;
+        if (window.marked) {
+            html = window.marked.parse(processed);
+        } else {
+            html = processed.replace(/\n/g, '<br>');
+        }
+
+        // Restore math blocks
+        html = html.replace(/%%MATHBLOCK(\d+)%%/g, (match, index) => {
+            return blocks[parseInt(index)] || match;
+        });
+
+        return html;
     }
 
     closeViewPost() {
