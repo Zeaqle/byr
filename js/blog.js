@@ -13,10 +13,12 @@ class BlogManager {
     }
 
     loadPosts() {
+        this.posts = [];
         const saved = localStorage.getItem('zeaple_blog_posts');
         if (saved) {
             this.posts = JSON.parse(saved);
-        } else {
+        }
+        if (this.posts.length === 0) {
             this.posts = [
                 {
                     id: Date.now(),
@@ -177,6 +179,17 @@ $139$ 也是我 WC2025 的得分，当时场上 catfood 做了三个小时才做
             contentDiv.innerHTML = window.marked.parse(post.content);
         } else {
             contentDiv.innerHTML = post.content.replace(/\n/g, '<br>');
+        }
+
+        // Render LaTeX
+        if (window.renderMathInElement) {
+            renderMathInElement(contentDiv, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
         }
 
         modal.classList.add('active');
