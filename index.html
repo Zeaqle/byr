@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>byr | 个人网站</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">byr</a>
+            <div class="nav-menu" id="navMenu">
+                <a href="#hero" class="nav-link active">首页</a>
+                <a href="#blog" class="nav-link">博客</a>
+                <a href="#album" class="nav-link">相册</a>
+                <a href="#guestbook" class="nav-link">留言板</a>
+                <a href="#about" class="nav-link">关于</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero" id="hero">
+        <canvas class="liquid-canvas" id="liquidCanvas"></canvas>
+        <div class="hero-content">
+            <div class="hero-badge glow-pulse">OIer & Manchester United</div>
+            <h1 class="hero-title">byr</h1>
+            <p class="hero-subtitle">NOI 2026 山东省队 · APIO 2026 中国区铜牌</p>
+            <p class="hero-desc">来自山东省烟台第二中学</p>
+            <div class="hero-actions">
+                <a href="#blog" class="btn btn-primary">探索我的世界 <i class="fas fa-arrow-right"></i></a>
+                <a href="#about" class="btn btn-outline">了解更多</a>
+            </div>
+            <div class="scroll-indicator">
+                <span>向下滚动</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </section>
+
+    <section class="section blog-section" id="blog">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Blog</span>
+                <h2 class="section-title">我的博客</h2>
+                <p class="section-desc">记录学习路上的思考与感悟</p>
+            </div>
+            <div class="blog-toolbar">
+                <div class="blog-filter">
+                    <button class="filter-btn active" data-filter="all">全部</button>
+                    <button class="filter-btn" data-filter="algorithm">算法</button>
+                    <button class="filter-btn" data-filter="life">生活</button>
+                    <button class="filter-btn" data-filter="contest">竞赛</button>
+                </div>
+                <button class="btn btn-primary btn-sm" id="newPostBtn"><i class="fas fa-plus"></i> 写文章</button>
+            </div>
+            <div class="blog-grid" id="blogGrid"></div>
+        </div>
+    </section>
+
+    <div class="modal" id="blogModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="modalTitle">写文章</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>标题</label>
+                    <input type="text" id="postTitle" class="form-input" placeholder="输入文章标题...">
+                </div>
+                <div class="form-group">
+                    <label>分类</label>
+                    <select id="postCategory" class="form-select">
+                        <option value="algorithm">算法</option>
+                        <option value="life">生活</option>
+                        <option value="contest">竞赛</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>内容 (支持 Markdown)</label>
+                    <textarea id="postContent" class="form-textarea" placeholder="用 Markdown 写文章..."></textarea>
+                    <div class="editor-preview" id="editorPreview"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelPost">取消</button>
+                <button class="btn btn-primary" id="savePost">发布文章</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="viewPostModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="viewPostTitle">文章</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="post-meta">
+                    <span class="post-category-badge" id="viewPostCategory"></span>
+                    <span class="post-date" id="viewPostDate"></span>
+                </div>
+                <div class="post-content markdown-body" id="viewPostContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <section class="section album-section" id="album">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Gallery</span>
+                <h2 class="section-title">我的相册</h2>
+                <p class="section-desc">记录生活中的美好瞬间</p>
+            </div>
+            <div class="album-toolbar">
+                <label class="btn btn-primary btn-sm upload-btn">
+                    <i class="fas fa-upload"></i> 上传照片
+                    <input type="file" id="photoUpload" accept="image/*" multiple hidden>
+                </label>
+            </div>
+            <div class="album-grid" id="albumGrid"></div>
+        </div>
+    </section>
+
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-overlay"></div>
+        <button class="lightbox-close"><i class="fas fa-times"></i></button>
+        <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
+        <div class="lightbox-content">
+            <img src="" alt="" id="lightboxImg">
+            <div class="lightbox-info">
+                <span id="lightboxDate"></span>
+                <span id="lightboxIndex"></span>
+            </div>
+        </div>
+    </div>
+
+    <section class="section guestbook-section" id="guestbook">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Guestbook</span>
+                <h2 class="section-title">留言板</h2>
+                <p class="section-desc">留下你想说的话，每一条留言都是温暖的陪伴</p>
+            </div>
+            <div class="guestbook-container">
+                <div class="guestbook-form glass-card">
+                    <h3>留下你的足迹 <i class="fas fa-pen-fine"></i></h3>
+                    <div class="form-group">
+                        <input type="text" id="guestName" class="form-input" placeholder="你的名字...">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="guestMessage" class="form-textarea" rows="4" placeholder="你想说的话..."></textarea>
+                    </div>
+                    <button class="btn btn-primary" id="submitGuestMsg"><i class="fas fa-paper-plane"></i> 发送留言</button>
+                </div>
+                <div class="guestbook-messages" id="guestbookMessages"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section about-section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">About</span>
+                <h2 class="section-title">关于我</h2>
+                <p class="section-desc">一个热爱算法的 OIer</p>
+            </div>
+            <div class="about-toolbar">
+                <button class="btn btn-primary btn-sm" id="editAboutBtn"><i class="fas fa-edit"></i> 编辑个人资料</button>
+            </div>
+            <div class="about-grid">
+                <div class="about-card glass-card">
+                    <div class="about-avatar"><span class="avatar-text" id="aboutAvatarText">Z</span></div>
+                    <h3 id="aboutName">byr</h3>
+                    <p class="about-bio" id="aboutBio">一个来自山东烟台的高中生OIer，热爱算法竞赛和计算机科学。在 NOI 2026 中入选山东省队，APIO 2026 获得中国区铜牌。</p>
+                    <div class="about-stats">
+                        <div class="stat-item"><span class="stat-number" id="aboutStat1">3+</span><span class="stat-label">OI 生涯</span></div>
+                        <div class="stat-item"><span class="stat-number" id="aboutStat2">10+</span><span class="stat-label">竞赛奖项</span></div>
+                        <div class="stat-item"><span class="stat-number" id="aboutStat3">∞</span><span class="stat-label">热爱</span></div>
+                    </div>
+                </div>
+                <div class="about-card glass-card">
+                    <h3><i class="fas fa-code"></i> 技能</h3>
+                    <div class="skill-list">
+                        <div class="skill-item"><span class="skill-name">C++</span><div class="skill-bar"><div class="skill-progress" style="width:95%"></div></div></div>
+                        <div class="skill-item"><span class="skill-name">Python</span><div class="skill-bar"><div class="skill-progress" style="width:75%"></div></div></div>
+                        <div class="skill-item"><span class="skill-name">算法竞赛</span><div class="skill-bar"><div class="skill-progress" style="width:90%"></div></div></div>
+                        <div class="skill-item"><span class="skill-name">Web</span><div class="skill-bar"><div class="skill-progress" style="width:60%"></div></div></div>
+                    </div>
+                </div>
+                <div class="about-card glass-card">
+                    <h3><i class="fas fa-trophy"></i> 荣誉</h3>
+                    <div class="timeline">
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><span class="timeline-date">2026</span><h4>APIO 2026 中国区铜牌</h4></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><span class="timeline-date">2026</span><h4>NOI 2026 山东省队</h4></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><span class="timeline-date">2025</span><h4>NOIP 2025 省级一等奖</h4></div></div>
+                        <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><span class="timeline-date">2024</span><h4>CSP-J/S 2024 提高组一等奖</h4></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Editor Modal -->
+    <div class="modal" id="aboutModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>编辑个人资料</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>头像文字</label>
+                    <input type="text" id="editAvatarText" class="form-input" placeholder="单个字母">
+                </div>
+                <div class="form-group">
+                    <label>名字</label>
+                    <input type="text" id="editName" class="form-input" placeholder="你的名字">
+                </div>
+                <div class="form-group">
+                    <label>个人简介</label>
+                    <textarea id="editBio" class="form-textarea" rows="4" placeholder="介绍一下自己..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>统计数字 1 (OI 生涯)</label>
+                    <input type="text" id="editStat1" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>统计数字 2 (竞赛奖项)</label>
+                    <input type="text" id="editStat2" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>统计数字 3 (热爱)</label>
+                    <input type="text" id="editStat3" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>荣誉 (每行一个，格式: 年份|荣誉名称)</label>
+                    <textarea id="editHonors" class="form-textarea" rows="4" placeholder="2026|APIO 2026 中国区铜牌&#10;2026|NOI 2026 山东省队"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelAboutEdit">取消</button>
+                <button class="btn btn-primary" id="saveAboutEdit">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand"><h3>byr</h3><p>用代码改变世界，用文字记录生活</p></div>
+                <div class="footer-links">
+                    <a href="#hero">首页</a>
+                    <a href="#blog">博客</a>
+                    <a href="#album">相册</a>
+                    <a href="#guestbook">留言板</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-bilibili"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-qq"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 byr.</p></div>
+        </div>
+    </footer>
+
+    <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></button>
+
+    <script src="lib/marked.min.js"></script>
+    <script src="js/liquid.js"></script>
+    <script src="js/blog.js"></script>
+    <script src="js/album.js"></script>
+    <script src="js/guestbook.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
