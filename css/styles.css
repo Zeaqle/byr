@@ -162,6 +162,23 @@ a {
     max-width: 800px;
 }
 
+.hero-avatar-hero {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 24px;
+    border: 4px solid var(--primary-light);
+    box-shadow: 0 0 40px rgba(108,92,231,0.3);
+    animation: fadeUp 0.8s ease-out;
+}
+
+.hero-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .hero-badge {
     display: inline-block;
     padding: 8px 20px;
@@ -868,14 +885,18 @@ a {
 }
 
 .about-avatar {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--accent));
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
     margin: 0 auto 16px;
+    border: 3px solid var(--primary-light);
+}
+
+.about-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .avatar-text {
