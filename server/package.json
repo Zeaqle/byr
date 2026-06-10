@@ -1,0 +1,12 @@
+{
+  "name": "waline-server",
+  "version": "1.0.0",
+  "description": "Waline comment server for personal website",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@waline/vercel": "^3.0.0"
+  }
+}
