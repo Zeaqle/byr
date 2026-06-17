@@ -21,6 +21,21 @@ class BlogManager {
         if (this.posts.length === 0) {
             this.posts = [
                 {
+                    id: Date.now() + 1,
+                    title: '逐点牛顿迭代',
+                    category: 'algorithm',
+                    content: `实际上是 [P10461](https://www.luogu.com.cn/problem/P10461) 题解。
+
+给定形式幂级数 $f$ 和集合幂级数 $G$，求 $F=f(G)$，保证 $[x^{\\emptyset}]G=0$，所以 $f$ 只有 $0\\sim n$ 次有用。
+
+想法很高妙啊，先做 FWT，乘法变成 OR 卷积。把 $x^S$ 写成 $\\prod\\limits_{i\\in S}x_i$，求出 $[x_n^1]F$，然后 $G$ 就可以变成 $[x_n^0]G$ 了。对两边求 $x_n$ 的偏导，**不能直接应用链式法则，因为我们是在模 $x^2_i-x_i$ 的环上操作**，合理的做法是将 $f(G)$ 写成 $f(A+Bx_n)$，其中 $AB$ 均不含 $x_n$，泰勒展开得到 $f(A)+f'(A)Bx_n$，高阶项均被截断。对这个式子求导得到 $[x_n^1]F=[x_n^0]f'(G)\\times[x_n^1]G$。$f'(G)$ 只需保留不含 $x_n$ 的项。
+
+从 $x_1$ 递推到 $x_n$，每次求出这一层的 $f^{(0)}(G_i),f^{(1)}(G_i),f^{(2)}(G_i),\\cdots,f^{(n-i)}(G_i)$。到下一层时通过上一层的信息递推，$[x_{i+1}^0]f^{(k)}(G_{i+1})=f^{(k)}(G_i)$，$[x_{i+1}^1]f^{(k+1)}(G_{i+1})=f^{k+1}(G_i)\\times[x_{i+1}^1]G_i$。
+
+第 $i$ 层需要做规模为 $i-1$ 的卷积 $n-i+1$ 次，时间复杂度 $O(\\sum\\limits_{i=1}^n(n-i+1)2^{i-1}(i-1)^2)=O(n^22^n)$。`,
+                    date: '2026-06-15'
+                },
+                {
                     id: Date.now(),
                     title: 'APIO 反思',
                     category: 'contest',
